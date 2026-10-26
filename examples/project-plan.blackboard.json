@@ -1,0 +1,14 @@
+{
+  "formatVersion": 1,
+  "title": "プロジェクト計画の例",
+  "theme": "dark",
+  "nodes": [
+    { "id": "goal", "name": "目標を決める", "description": "達成したい状態を短く書く", "x": 420, "y": 350 },
+    { "id": "research", "name": "必要な情報を集める", "description": "制約と前提を確認する", "x": 700, "y": 250 },
+    { "id": "plan", "name": "実行計画を作る", "description": "最初の一歩を決める", "x": 700, "y": 450 }
+  ],
+  "edges": [
+    { "id": "goal-to-research", "from": "goal", "to": "research", "type": "cause", "label": "" },
+    { "id": "research-to-plan", "from": "research", "to": "plan", "type": "premise", "label": "" }
+  ]
+}

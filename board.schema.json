@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blackboard.local/board.schema.json",
+  "title": "BlackBoard board",
+  "description": "One board containing capsules (nodes) and directed connections (edges).",
+  "type": "object",
+  "required": ["title", "nodes", "edges"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "title": { "type": "string" },
+    "theme": { "enum": ["dark", "light"] },
+    "nodes": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "x", "y"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "x": { "type": "number" },
+          "y": { "type": "number" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "edges": {
+      "type": "array",
+      "maxItems": 2000,
+      "items": {
+        "type": "object",
+        "required": ["id", "from", "to", "type", "label"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "type": { "enum": ["cause", "prevent", "premise", "relate"] },
+          "label": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

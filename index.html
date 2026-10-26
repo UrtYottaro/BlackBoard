@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#191a1d">
+  <title>BlackBoard</title>
+  <link rel="icon" href="blackboard-favicon.svg?v=1" type="image/svg+xml">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="minimal.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <aside class="sidebar" aria-label="ワークスペース">
+      <div class="brand"><img class="brand-mark" src="blackboard-logo.svg?v=8" alt=""><div><strong>BlackBoard</strong><small>思考をつなぐキャンバス</small></div></div>
+      <div class="sidebar-section-label">ワークスペース</div>
+      <button class="workspace-card" id="workspaceButton" type="button"><span class="workspace-icon">✦</span><span><strong>マイキャンバス</strong><small>ローカルに保存中</small></span><span class="workspace-chevron">⌄</span></button>
+      <div class="sidebar-section-label boards-label">キャンバス <span>1 / 1</span></div>
+      <button class="board-item active" type="button" id="boardItem"><span class="board-item-icon">▦</span><span id="sidebarBoardName">無題のキャンバス</span><span class="board-item-dot"></span></button>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-help"><div class="help-icon">✳</div><strong>アイデアを、つながりへ。</strong><p>単語を置き、関係を結ぶことで設定の流れが見えてきます。</p><button type="button" id="showHelp">使い方を見る <span>↗</span></button></div>
+      <div class="sidebar-footer"><span class="avatar">B</span><span>あなたのワークスペース</span><span class="status-dot"></span></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumbs"><span>キャンバス</span><span class="crumb-sep">/</span><input id="boardTitle" aria-label="キャンバス名" maxlength="80" value=""><span class="saved-pill" id="saveStatus">保存済み</span></div>
+        <div class="top-actions"><button class="icon-button mobile-menu" id="menuButton" type="button" aria-label="メニュー">☰</button><button class="subtle-button" id="importButton" type="button">読み込む</button><button class="subtle-button" id="exportButton" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 16v4h16v-4"/></svg>書き出す</button><button class="icon-button" id="themeButton" type="button" title="テーマを切り替える" aria-label="テーマを切り替える"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.4A8.5 8.5 0 0 1 9.6 3.5 8.5 8.5 0 1 0 20.5 14.4Z"/></svg></button></div>
+      </header>
+
+      <div class="content">
+        <section class="board-area" aria-label="関係図キャンバス">
+          <div class="board-intro"><div class="eyebrow"><span class="eyebrow-line"></span> STORY CANVAS <span class="eyebrow-line"></span></div><h1 id="heroTitle">無題のキャンバス</h1><p>散らばるアイデアを置いて、物語の因果をつなげよう。</p></div>
+          <div class="board-toolbar"><div class="toolbar-left"><button class="primary-button" id="addNodeButton" type="button"><span class="plus">＋</span> 単語を追加</button><button class="toolbar-button" id="connectButton" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 12h10"/></svg>関係をつなぐ</button><div class="toolbar-divider"></div><div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="searchInput" type="search" placeholder="単語を探す" aria-label="単語を探す"><kbd>⌘ K</kbd></div></div><div class="toolbar-right"><span id="countLabel">0 個の単語 · 0 個の関係</span></div></div>
+
+          <div class="canvas-shell" id="canvasShell">
+            <div class="canvas" id="canvas" tabindex="0" aria-label="単語をドラッグして配置できるキャンバス">
+              <div class="world" id="world"><svg class="edges" id="edges" viewBox="0 0 3000 2200" aria-hidden="true"><defs id="edgeDefs"></defs><g id="edgeLayer"></g></svg><div id="nodeLayer"></div></div>
+              <div class="selection-marquee" id="selectionMarquee" hidden aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+              <svg class="cut-overlay" id="cutOverlay" hidden aria-hidden="true"><line id="cutLine"></line></svg>
+              <div class="canvas-label"><span class="canvas-label-dot"></span>自由に配置できるキャンバス</div>
+              <div class="canvas-hint" id="canvasHint">ドラッグで移動 <span>·</span> スクロールで拡大・縮小</div>
+              <div class="zoom-controls"><button id="zoomOut" type="button" aria-label="縮小">−</button><span id="zoomValue">100%</span><button id="zoomIn" type="button" aria-label="拡大">＋</button><span class="zoom-divider"></span><button id="fitButton" type="button" aria-label="全体を表示" title="全体を表示"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button></div>
+              <div class="connect-banner" id="connectBanner" hidden><span class="connect-pulse"></span><span id="connectMessage">最初の単語を選択してください</span><button id="cancelConnect" type="button">キャンセル</button></div>
+            </div>
+          </div>
+          <div class="board-footer"><div class="legend"><span><i class="legend-dot person"></i>人物</span><span><i class="legend-dot event"></i>出来事</span><span><i class="legend-dot place"></i>場所</span><span><i class="legend-dot concept"></i>設定・概念</span></div><span class="board-footer-tip">単語を選択すると詳細を編集できます <span>↗</span></span></div>
+        </section>
+
+        <aside class="inspector" id="inspector" aria-label="詳細パネル"><div id="inspectorContent"></div></aside>
+      </div>
+    </main>
+  </div>
+
+  <aside class="history-panel" id="historyPanel" aria-label="ボード履歴" aria-hidden="true">
+    <div class="history-heading"><img src="blackboard-logo.svg?v=8" alt="" width="40" height="40"><span>BlackBoard</span></div>
+    <button class="history-new" id="newBoardButton" type="button"><span aria-hidden="true">＋</span>新しいボード</button>
+    <div class="history-section-title">履歴</div>
+    <nav class="history-list" id="boardHistoryList" aria-label="保存されたボード"></nav>
+    <div class="history-settings-footer" aria-hidden="true"></div>
+  </aside>
+  <button class="history-toggle" id="historyToggle" type="button" aria-label="ボード履歴を開く" aria-controls="historyPanel" aria-expanded="false" title="ボード履歴">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg>
+  </button>
+
+  <div class="settings-menu" id="settingsMenu">
+    <button class="settings-toggle" id="settingsToggle" type="button" aria-label="設定を開く" aria-controls="settingsPanel" aria-expanded="false" title="設定">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <div class="settings-panel" id="settingsPanel" role="dialog" aria-label="設定" hidden>
+      <div class="settings-heading">設定</div>
+      <button class="settings-row" id="settingsHelp" type="button">
+        <span class="settings-leading"><span class="settings-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M9 5l3-3 3 3m-6 14 3 3 3-3M5 9l-3 3 3 3m14-6 3 3-3 3"/></svg></span><span>操作説明</span></span>
+        <span class="settings-help-link" aria-hidden="true">↗</span>
+      </button>
+      <div class="settings-divider"></div>
+      <label class="settings-row settings-appearance" for="themeSwitch">
+        <span class="settings-leading"><svg class="settings-appearance-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>外観</span></span>
+        <span class="theme-switch"><input id="themeSwitch" type="checkbox" role="switch" aria-label="明るい表示"><span class="theme-switch-track" aria-hidden="true"><span class="theme-switch-thumb"></span></span></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="export-menu" id="exportMenu">
+    <button class="png-export" id="exportMenuToggle" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="pngExport jsonExport jsonImport" title="メニューを開く"><span></span><span></span></button>
+    <button class="download-action" id="pngExport" type="button" aria-label="PNGをダウンロード" title="PNGをダウンロード">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3"/></svg>
+    </button>
+    <button class="download-action json-export" id="jsonExport" type="button" aria-label="ボードをJSONで書き出す" title="AI編集用JSONを書き出す"><span aria-hidden="true">{↓}</span></button>
+    <button class="download-action json-import" id="jsonImport" type="button" aria-label="編集したJSONを読み込む" title="編集したJSONを読み込む"><span aria-hidden="true">{↑}</span></button>
+  </div>
+  <div class="modal-backdrop" id="helpModal" hidden>
+    <div class="modal help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <div class="modal-head">
+        <div><span class="modal-kicker">操作説明</span><h2 id="helpTitle">BlackBoard の使い方</h2></div>
+        <button class="close-button" id="closeHelp" type="button" aria-label="閉じる">×</button>
+      </div>
+      <div class="help-list">
+        <div><span class="help-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="14" height="10" rx="5"/><path d="M20 5v8m-4-4h8"/></svg></span><p><strong>カプセルを作る・書く</strong><br>板をダブルクリックすると新しいカプセルを作れます。カプセルもダブルクリックで文字を編集でき、右上の＋でつながるカプセルを増やせます。</p></div>
+        <div><span class="help-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18m-12-6 3-3 3 3m-6 12 3 3 3-3M6 9l-3 3 3 3m12-6 3 3-3 3"/></svg></span><p><strong>動かす・見渡す</strong><br>カプセルをドラッグして配置。二本指で板を移動・拡大縮小し、カプセルをクリックすると中央へ移動します。</p></div>
+        <div><span class="help-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="3 3"/><path d="m8 12 3 3 5-6"/></svg></span><p><strong>選ぶ・つなぐ</strong><br>板をドラッグして囲むか、Shift＋クリックで複数選択。Deleteで削除、二つ選んでEnterで接続できます。</p></div>
+        <div><span class="help-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg></span><p><strong>ボードを保存する</strong><br>左上でボード履歴、右上でPNG・JSONの書き出しとJSONの読み込みができます。</p></div>
+      </div>
+      <button class="primary-button help-done" id="helpDone" type="button">閉じる</button>
+    </div>
+  </div>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="board-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

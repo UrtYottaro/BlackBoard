@@ -1,0 +1,10 @@
+{
+  "name": "blackboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/serve.cjs",
+    "board": "node scripts/blackboard.cjs",
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+
+# 個人のボードデータは公開しない（形式の例 examples/ だけは含める）
+plans/
+*.blackboard.json
+!examples/*.blackboard.json
+
+# 参考にした他人の HTML（自作ではない）
+babel*.html
+
+# ローカルの作業設定と、内部の引き継ぎメモ
+.claude/
+CLAUDE_HANDOFF.md
+
+# 月のシーン（GRAPHART）へのリンクは公開しない
+moon
